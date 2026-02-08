@@ -14,6 +14,7 @@
             margin: 0;
             font-family: 'Pacifico', cursive;
             background-image: linear-gradient(45deg, #ff6699, #ff99cc);
+            overflow: hidden; /* prevents scrollbars when YES fills screen */
         }
 
         @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
@@ -38,6 +39,7 @@
             justify-content: center;
             gap: 15px;
             margin-top: 20px;
+            flex-wrap: wrap; /* allow multiple rows */
         }
 
         .images img {
@@ -86,6 +88,20 @@
             font-size: calc(1.5em + 0.1em);
         }
 
+        /* FULLSCREEN YES button */
+        #yesBtn.fullscreen {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(10);
+            width: 100vw;
+            height: 100vh;
+            font-size: 5em;
+            z-index: 9999;
+            border-radius: 0;
+            transition: transform 1.5s ease, width 1.5s ease, height 1.5s ease, font-size 1.5s ease;
+        }
+
         @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-20px); }
@@ -100,6 +116,8 @@
             <img src="sabrina1.jpg" alt="Sabrina 1">
             <img src="sabrina2.jpg" alt="Sabrina 2">
             <img src="sabrina3.jpg" alt="Sabrina 3">
+            <img src="sabrina4.jpg" alt="Sabrina 4">
+            <img src="sabrina5.jpg" alt="Sabrina 5">
         </div>
 
         <div class="buttons">
@@ -125,29 +143,63 @@
         let noButtonIndex = 0;
 
         function respondYes() {
-            // Create floating hearts
-            for (let i = 0; i < 50; i++) {
-                createHeart();
-            }
-            document.getElementById('secretMessage').style.display = 'block';
+            const yesBtn = document.getElementById('yesBtn');
+            yesBtn.classList.add('fullscreen'); // enlarge YES button
+
+            // Show secret message after short delay
+            setTimeout(() => {
+                document.getElementById('secretMessage').style.display = 'block';
+            }, 1000);
+
+            // Create floating hearts and images
+            for (let i = 0; i < 100; i++) createHeart();
+            for (let i = 0; i < 20; i++) createFloatingImage();
         }
 
         function createHeart() {
             const heart = document.createElement('span');
             heart.innerHTML = '💖';
-            heart.style.position = 'absolute';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
-            heart.style.top = 0;
+            heart.style.position = 'fixed';
+            heart.style.left = Math.random() * window.innerWidth + 'px';
+            heart.style.top = Math.random() * window.innerHeight + 'px';
+            heart.style.fontSize = Math.random() * 30 + 20 + 'px';
+            heart.style.opacity = Math.random();
+            heart.style.transition = 'all 4s linear';
             document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 5000);
+
+            setTimeout(() => {
+                heart.style.top = window.innerHeight + 'px';
+                heart.style.left = Math.random() * window.innerWidth + 'px';
+            }, 50);
+
+            setTimeout(() => heart.remove(), 4000);
+        }
+
+        function createFloatingImage() {
+            const img = document.createElement('img');
+            const images = ["sabrina1.jpg","sabrina2.jpg","sabrina3.jpg","sabrina4.jpg","sabrina5.jpg"];
+            img.src = images[Math.floor(Math.random() * images.length)];
+            img.style.position = 'fixed';
+            img.style.width = '100px';
+            img.style.height = '100px';
+            img.style.left = Math.random() * window.innerWidth + 'px';
+            img.style.top = Math.random() * window.innerHeight + 'px';
+            img.style.opacity = 0.8;
+            img.style.transition = 'all 5s linear';
+            document.body.appendChild(img);
+
+            setTimeout(() => {
+                img.style.left = Math.random() * window.innerWidth + 'px';
+                img.style.top = Math.random() * window.innerHeight + 'px';
+            }, 50);
+
+            setTimeout(() => img.remove(), 5000);
         }
 
         function progressiveNo() {
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
-            
-            // Change the text of the "NO" button
+
             if (noButtonIndex < noButtonTexts.length) {
                 noBtn.innerText = noButtonTexts[noButtonIndex];
                 noButtonIndex++;
@@ -155,7 +207,6 @@
                 noBtn.innerText = "❤️ You're MINE ❤️";
             }
 
-            // Make the "YES" button grow
             yesBtn.classList.add('grow');
             setTimeout(() => yesBtn.classList.remove('grow'), 300);
         }
