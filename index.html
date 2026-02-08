@@ -117,7 +117,6 @@
             <img src="sabrina2.jpg" alt="Sabrina 2">
             <img src="sabrina3.jpg" alt="Sabrina 3">
             <img src="sabrina4.jpg" alt="Sabrina 4">
-            <img src="sabrina5.jpg" alt="Sabrina 5">
         </div>
 
         <div class="buttons">
@@ -174,6 +173,27 @@
 
             setTimeout(() => heart.remove(), 4000);
         }
+        
+        function respondYes() {
+            const yesBtn = document.getElementById('yesBtn');
+        
+            // Force it to fullscreen
+            yesBtn.classList.add('fullscreen');
+        
+            // Animate scale separately for smoother effect
+            setTimeout(() => {
+                yesBtn.style.transform = 'translate(-50%, -50%) scale(10)';
+            }, 50); // small delay to let browser apply fixed positioning
+        
+            // Show secret message after 1s
+            setTimeout(() => {
+                document.getElementById('secretMessage').style.display = 'block';
+            }, 1000);
+        
+            // Create floating hearts and images
+            for (let i = 0; i < 100; i++) createHeart();
+            for (let i = 0; i < 20; i++) createFloatingImage();
+        }
 
         function createFloatingImage() {
             const img = document.createElement('img');
@@ -213,3 +233,4 @@
     </script>
 </body>
 </html>
+
